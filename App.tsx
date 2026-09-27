@@ -2,7 +2,7 @@ import { StatusBar } from "expo-status-bar";
 import "react-native-gesture-handler";
 
 import {
-  DarkTheme,
+  DefaultTheme,
   NavigationContainer,
 } from "@react-navigation/native";
 
@@ -19,6 +19,7 @@ import AddRoutineScreen from "./src/screens/AddRoutineScreen";
 import {
   RoutineProvider
 } from "./src/context/RoutineContext";
+import { colors } from "./src/theme";
 
 
 // Tipos de las rutas
@@ -51,22 +52,21 @@ export default function App() {
 
       <NavigationContainer
         theme={{
-          ...DarkTheme,
+          ...DefaultTheme,
 
           colors: {
-            ...DarkTheme.colors,
-
-            primary: "#8f1d24",
-            background: "#f7f7f7",
-            card: "#ffffff",
-            text: "#111111",
-            border: "#e3e3e3",
+            ...DefaultTheme.colors,
+            primary: colors.primary,
+            background: colors.background,
+            card: colors.surface,
+            text: colors.text,
+            border: colors.border,
           },
 
         }}
       >
 
-        <StatusBar style="light" />
+        <StatusBar style="dark" />
 
 
         <Stack.Navigator>
@@ -88,10 +88,11 @@ export default function App() {
               title: "Detalles de rutina",
 
               headerStyle: {
-                backgroundColor: "#ffffff",
+                backgroundColor: colors.surface,
               },
 
-              headerTintColor: "#111111",
+              headerTintColor: colors.text,
+              headerTitleStyle: { fontWeight: "800" },
 
               headerShadowVisible: false,
             }}
@@ -108,10 +109,11 @@ export default function App() {
                 : "Nueva Rutina",
 
               headerStyle: {
-                backgroundColor: "#ffffff",
+                backgroundColor: colors.surface,
               },
 
-              headerTintColor: "#111111",
+              headerTintColor: colors.text,
+              headerTitleStyle: { fontWeight: "800" },
 
               headerShadowVisible: false,
 

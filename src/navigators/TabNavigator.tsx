@@ -2,6 +2,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Ionicons } from '@expo/vector-icons'; 
 import ProgressScreen from "../screens/ProgressScreen";
 import RoutineListScreen from "../screens/RoutineListScreen";
+import { colors } from "../theme";
 
 const Tab = createBottomTabNavigator();
 
@@ -14,10 +15,10 @@ export default function TabNavigator(){
                 tabBarIcon: ({ color, size }) => {           
                 let iconName: keyof typeof Ionicons.glyphMap = 'fitness';           
                 if (route.name === 'Progreso') {
-                    iconName = 'stats-chart';
+                    iconName = 'stats-chart-outline';
                 } 
                 else if (route.name === 'Rutinas') {
-                    iconName = 'list';
+                    iconName = 'barbell-outline';
                 }
 
                 return <Ionicons name={iconName} size={size} color={color}/>
@@ -25,14 +26,14 @@ export default function TabNavigator(){
 
             },   
             
-            tabBarActiveTintColor: '#c9363f',
-            tabBarInactiveTintColor: '#707070',
+            tabBarActiveTintColor: colors.primary,
+            tabBarInactiveTintColor: '#777777',
             tabBarStyle: {
-                backgroundColor: '#ffffff',
-                borderTopColor: '#e3e3e3',
-                height: 70,
+                backgroundColor: colors.surface,
+                borderTopColor: colors.border,
+                height: 68,
                 paddingTop: 8,
-                paddingBottom: 10,
+                paddingBottom: 8,
             },
             tabBarLabelStyle: {
                 fontSize: 11,
@@ -42,8 +43,8 @@ export default function TabNavigator(){
         
         })}
         >
+        <Tab.Screen name="Rutinas" component={RoutineListScreen} />
         <Tab.Screen name="Progreso" component={ProgressScreen} />
-        <Tab.Screen name="Listas Rutinas" component={RoutineListScreen} />
 
         </Tab.Navigator>
     )
