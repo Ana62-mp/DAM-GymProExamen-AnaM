@@ -20,6 +20,10 @@ export default function ProgressScreen() {
     {},
   );
   const entries = Object.entries(distribution).sort((a, b) => b[1] - a[1]);
+  const averageMinutes =
+    routines.length > 0 ? Math.round(totalMinutes / routines.length) : 0;
+  const topGroup = entries.length > 0 ? entries[0][0] : "Sin rutinas";
+
   const maxCount = Math.max(...entries.map(([, count]) => count), 1);
   const hours = Math.floor(totalMinutes / 60);
   const minutes = totalMinutes % 60;
@@ -73,6 +77,22 @@ export default function ProgressScreen() {
             value={entries.length}
             label="Grupos diferentes"
           />
+        </View>
+
+        <View style={styles.statsRow}>
+          <Stat
+            icon="time-outline"
+            value={averageMinutes}
+            label="Promedio de minutos"
+          />
+
+          <View style={styles.statCard}>
+            <Ionicons name="trophy-outline" size={22} color={colors.accent} />
+
+            <Text style={styles.statValue}>{topGroup}</Text>
+
+            <Text style={styles.statLabel}>Grupo con más rutinas</Text>
+          </View>
         </View>
 
         <View style={styles.chartCard}>

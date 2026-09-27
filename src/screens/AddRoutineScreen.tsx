@@ -33,8 +33,9 @@ export default function AddRoutineScreen({ navigation, route }: any) {
   const [duration, setDuration] = useState(45);
   const [nameFocused, setNameFocused] = useState(false);
   const [errors, setErrors] = useState<Errors>({});
+  const [isSaving, setIsSaving] = useState(false);
   const minDuration = 10;
-  const maxDuration = 180
+  const maxDuration = 180;
 
   useEffect(() => {
     if (routineToEdit) {
@@ -58,11 +59,14 @@ export default function AddRoutineScreen({ navigation, route }: any) {
   }, [muscleGroup]);
 
   const adjustDuration = (change: number) => {
-    setDuration((current) => Math.min(maxDuration, Math.max(minDuration, current + change)));
+    setDuration((current) =>
+      Math.min(maxDuration, Math.max(minDuration, current + change)),
+    );
     setErrors((current) => ({ ...current, duration: undefined }));
   };
 
   const handleSave = () => {
+    if (isSaving) return;
     const cleanName = name.trim();
     const nextErrors: Errors = {};
 
@@ -71,7 +75,11 @@ export default function AddRoutineScreen({ navigation, route }: any) {
 
     if (!muscleGroup) nextErrors.muscleGroup = "Selecciona un grupo muscular.";
 
-    if (!Number.isFinite(duration) || duration < minDuration || duration > maxDuration)
+    if (
+      !Number.isFinite(duration) ||
+      duration < minDuration ||
+      duration > maxDuration
+    )
       nextErrors.duration = "Elige una duración entre 10 y 180 minutos.";
 
     setErrors(nextErrors);
@@ -80,14 +88,25 @@ export default function AddRoutineScreen({ navigation, route }: any) {
 
     const data = { name: cleanName, muscleGroup, duration };
 
-    if (idToEdit) updateRoutine(idToEdit, data);
-    else addRoutine(data);
+    setIsSaving(true);
+    try {
+      if (idToEdit) updateRoutine(idToEdit, data);
+      else addRoutine(data);
 
-    Alert.alert(
-      idToEdit ? "Rutina actualizada" : "Rutina creada",
-      "Tu planificación se guardó correctamente.",
-      [{ text: "Listo", onPress: () => navigation.goBack() }],
-    );
+      Alert.alert(
+        idToEdit ? "Rutina actualizada" : "Rutina creada",
+        "Tu planificación se guardó correctamente.",
+        [{ text: "Listo", onPress: () => navigation.goBack() }],
+      );
+    } catch (error) {
+      console.error("Error al guardar rutina:", error);
+      Alert.alert(
+        "Error",
+        "No se pudo guardar la rutina. Inténtalo nuevamente.",
+      );
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   return (
@@ -306,6 +325,7 @@ export default function AddRoutineScreen({ navigation, route }: any) {
         <Pressable
           accessibilityRole="button"
           onPress={handleSave}
+          disabled={isSaving}
           style={({ pressed }) => [
             styles.saveButton,
             pressed && styles.pressed,
@@ -317,7 +337,11 @@ export default function AddRoutineScreen({ navigation, route }: any) {
             color={colors.white}
           />
           <Text style={styles.saveText}>
-            {idToEdit ? "Actualizar rutina" : "Guardar rutina"}
+            {isSaving
+              ? "Guardando..."
+              : idToEdit
+                ? "Actualizar rutina"
+                : "Guardar rutina"}
           </Text>
         </Pressable>
       </ScrollView>
