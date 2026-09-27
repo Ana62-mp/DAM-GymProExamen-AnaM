@@ -12,6 +12,7 @@ import {
   insertRoutine,
   updateRoutineDB,
   deleteRoutineDB,
+  setFeaturedRoutineDB,
 } from "../database/db";
 
 // Tipo de una rutina completa
@@ -21,6 +22,7 @@ export type Routine = {
   muscleGroup: string;
   duration: number;
   createdAt: string;
+  featured: boolean;
 };
 
 // Datos que llegan desde los inputs
@@ -34,12 +36,10 @@ type DatosRutina = {
 // Lo que va a compartir el  Context
 type RoutineContextType = {
   routines: Routine[];
-
   addRoutine: (datos: DatosRutina) => Promise<void>;
-
   updateRoutine: (id: string, datos: DatosRutina) => Promise<void>;
-
   deleteRoutine: (id: string) => Promise<void>;
+  setFeaturedRoutine: (id: string) => Promise<void>;
 };
 
 // Crear Context
@@ -80,8 +80,8 @@ export function RoutineProvider({ children }: { children: ReactNode }) {
 
       // Convertimos el valor a número
       duration: Number(datos.duration),
-
       createdAt: new Date().toISOString(),
+      featured: false,
     };
     await insertRoutine(nuevaRutina);
     setRoutines((actuales) => [...actuales, nuevaRutina]);
@@ -112,6 +112,23 @@ export function RoutineProvider({ children }: { children: ReactNode }) {
     setRoutines((actuales) => actuales.filter((rutina) => rutina.id !== id));
   };
 
+  // DESTACAR RUTINA
+  const setFeaturedRoutine = async (id: string) => {
+    const exists = routines.some((routine) => routine.id === id);
+
+    if (!exists) {
+      throw new Error("Rutina no encontrada");
+    }
+
+    await setFeaturedRoutineDB(id);
+    setRoutines((actuales) =>
+      actuales.map((routine) => ({
+        ...routine,
+        featured: routine.id === id,
+      })),
+    );
+  };
+
   return (
     <RoutineContext.Provider
       value={{
@@ -119,24 +136,19 @@ export function RoutineProvider({ children }: { children: ReactNode }) {
         addRoutine,
         updateRoutine,
         deleteRoutine,
+        setFeaturedRoutine
       }}
     >
       {loading ? (
-          <View
+        <View
           style={{
             flex: 1,
             justifyContent: "center",
-            alignItems: "center"
+            alignItems: "center",
           }}
         >
-
-          <ActivityIndicator
-            size="large"
-            color="#8f1d24"
-          />
-
+          <ActivityIndicator size="large" color="#8f1d24" />
         </View>
-      
       ) : (
         children
       )}

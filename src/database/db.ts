@@ -1,7 +1,11 @@
-
 import * as SQLite from "expo-sqlite";
 import type { Routine } from "../context/RoutineContext";
 
+
+
+type RoutineRow = Omit<Routine, "featured"> & {
+  featured: number;
+};
 
 // Guardamos la conexión a la base de datos
 let database: SQLite.SQLiteDatabase | null = null;
@@ -39,17 +43,22 @@ export async function initDatabase() {
 //FUNCIONES PARA EL CRUD
 
 // GET TODAS LAS RUTINAS
-export async function getAllRoutines() {
-  const db = await getDatabase();
 
-  const routines = await db.getAllAsync<Routine>(
-    `SELECT id, name, muscleGroup, duration, createdAt
+export async function getAllRoutines(): Promise<Routine[]> {
+  const db = await getDatabase();
+  const rows = await db.getAllAsync<RoutineRow>(
+    `SELECT id, name, muscleGroup, duration, createdAt, featured
      FROM routines
-     ORDER BY createdAt ASC`
+     ORDER BY createdAt DESC`
   );
 
-  return routines;
+  return rows.map((row) => ({
+    ...row,
+    featured: row.featured === 1
+  }));
+
 }
+
 
 
 // POST UNA RUTINA
@@ -93,4 +102,21 @@ export async function deleteRoutineDB(id: string) {
     `DELETE FROM routines WHERE id = ?`,
     id
   );
+}
+
+
+
+ 
+// DESTACAR rtuina
+export async function setFeaturedRoutineDB(id: string) {
+
+  const db = await getDatabase();
+
+  await db.runAsync(
+    `UPDATE routines SET featured = CASE
+       WHEN id = ? THEN 1
+       ELSE 0 END`,
+    id
+  );
+
 }

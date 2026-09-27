@@ -23,7 +23,7 @@ const normalize = (value: string) =>
     .trim();
 
 export default function RoutineListScreen({ navigation }: any) {
-  const { routines, deleteRoutine } = useRoutines();
+  const { routines, deleteRoutine, setFeaturedRoutine } = useRoutines();
   const [query, setQuery] = useState("");
   const [selectedGroup, setSelectedGroup] = useState("Todas");
   const totalMinutes = routines.reduce((sum, item) => sum + item.duration, 0);
@@ -75,6 +75,16 @@ export default function RoutineListScreen({ navigation }: any) {
         },
       ],
     );
+
+  const handleFeatured = async (id: string) => {
+    try {
+      await setFeaturedRoutine(id);
+    } catch (error) {
+      console.error("Error al destacar rutina:", error);
+
+      Alert.alert("Error", "No se pudo destacar la rutina :(");
+    }
+  };
 
   const renderRoutine = ({ item }: { item: Routine }) => {
     const visual = getMuscleOption(item.muscleGroup);
@@ -131,6 +141,30 @@ export default function RoutineListScreen({ navigation }: any) {
             danger
           />
         </View>
+
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel={
+            item.featured ? "Rutina destacada" : "Destacar rutina"
+          }
+          disabled={item.featured}
+          onPress={() => handleFeatured(item.id)}
+          style={({ pressed }) => [
+            styles.featuredButton,
+            item.featured && styles.featuredButtonActive,
+            pressed && styles.pressed,
+          ]}
+        >
+          <Ionicons
+            name={item.featured ? "star" : "star-outline"}
+            size={20}
+            color={item.featured ? "#D99A16" : colors.primary}
+          />
+
+          <Text style={styles.featuredButtonText}>
+            {item.featured ? "Rutina destacada" : "Destacar rutina"}
+          </Text>
+        </Pressable>
       </View>
     );
   };
@@ -547,4 +581,25 @@ const styles = StyleSheet.create({
     marginTop: 17,
   },
   emptyButtonText: { color: colors.white, fontSize: 13, fontWeight: "800" },
+
+  featuredButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 8,
+    paddingVertical: 13,
+    borderTopWidth: 1,
+    borderTopColor: colors.border,
+    backgroundColor: colors.surface,
+  },
+
+  featuredButtonActive: {
+    backgroundColor: "#FFF3D8",
+  },
+
+  featuredButtonText: {
+    color: colors.primary,
+    fontSize: 12,
+    fontWeight: "800",
+  },
 });

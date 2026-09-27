@@ -23,7 +23,7 @@ export default function ProgressScreen() {
   const averageMinutes =
     routines.length > 0 ? Math.round(totalMinutes / routines.length) : 0;
   const topGroup = entries.length > 0 ? entries[0][0] : "Sin rutinas";
-
+  const featuredRoutine = routines.find((routine) => routine.featured === true);
   const maxCount = Math.max(...entries.map(([, count]) => count), 1);
   const hours = Math.floor(totalMinutes / 60);
   const minutes = totalMinutes % 60;
@@ -93,6 +93,35 @@ export default function ProgressScreen() {
 
             <Text style={styles.statLabel}>Grupo con más rutinas</Text>
           </View>
+        </View>
+
+        {/* RUTINA DESTACADA */}
+
+        <View style={styles.featuredCard}>
+          <View style={styles.featuredHeader}>
+            <Ionicons name="star" size={22} color="#D99A16" />
+
+            <Text style={styles.featuredTitle}>Rutina destacada</Text>
+          </View>
+
+          {featuredRoutine ? (
+            <View>
+              <Text style={styles.featuredName}>{featuredRoutine.name}</Text>
+
+              <Text style={styles.featuredInfo}>
+                {featuredRoutine.muscleGroup}
+              </Text>
+
+              <Text style={styles.featuredInfo}>
+                Duración: {featuredRoutine.duration} minutos
+              </Text>
+            </View>
+          ) : (
+            <Text style={styles.featuredEmpty}>
+              Todavía no tienes una rutina destacada. Selecciona una desde Mis
+              rutinas.
+            </Text>
+          )}
         </View>
 
         <View style={styles.chartCard}>
@@ -330,4 +359,45 @@ const styles = StyleSheet.create({
   infoCopy: { flex: 1 },
   infoTitle: { color: colors.text, fontSize: 13, fontWeight: "900" },
   infoText: { color: "#537264", fontSize: 11, lineHeight: 16, marginTop: 3 },
+
+  featuredCard: {
+    backgroundColor: "#FFF8E8",
+    borderWidth: 1,
+    borderColor: "#E8D39A",
+    borderRadius: radii.lg,
+    padding: 18,
+    marginTop: 14,
+  },
+
+  featuredHeader: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 9,
+    marginBottom: 12,
+  },
+
+  featuredTitle: {
+    color: colors.text,
+    fontSize: 17,
+    fontWeight: "900",
+  },
+
+  featuredName: {
+    color: colors.primaryDark,
+    fontSize: 20,
+    fontWeight: "900",
+    marginBottom: 7,
+  },
+
+  featuredInfo: {
+    color: colors.textMuted,
+    fontSize: 13,
+    marginTop: 4,
+  },
+
+  featuredEmpty: {
+    color: colors.textMuted,
+    fontSize: 13,
+    lineHeight: 20,
+  },
 });

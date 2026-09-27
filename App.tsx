@@ -37,7 +37,6 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export default function App() {
   return (
-    <SafeAreaProvider>
       <RoutineProvider>
         <NavigationContainer
           theme={{
@@ -100,6 +99,5 @@ export default function App() {
           </Stack.Navigator>
         </NavigationContainer>
       </RoutineProvider>
-    </SafeAreaProvider>
   );
 }
