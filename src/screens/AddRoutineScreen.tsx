@@ -18,6 +18,7 @@ import {
   muscleOptions,
 } from "../routineOptions";
 import { colors, radii, shadow, spacing } from "../theme";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 type Errors = { name?: string; muscleGroup?: string; duration?: string };
 
@@ -91,6 +92,7 @@ export default function AddRoutineScreen({ navigation, route }: any) {
   };
 
   return (
+    <SafeAreaView>
     <KeyboardAvoidingView
       style={styles.screen}
       behavior={Platform.OS === "ios" ? "padding" : undefined}
@@ -322,6 +324,7 @@ export default function AddRoutineScreen({ navigation, route }: any) {
         </Pressable>
       </ScrollView>
     </KeyboardAvoidingView>
+    </SafeAreaView>
   );
 }
 
