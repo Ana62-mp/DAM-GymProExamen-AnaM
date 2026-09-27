@@ -37,67 +37,70 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export default function App() {
   return (
-      <RoutineProvider>
-        <NavigationContainer
-          theme={{
-            ...DefaultTheme,
+    <RoutineProvider>
 
-            colors: {
-              ...DefaultTheme.colors,
-              primary: colors.primary,
-              background: colors.background,
-              card: colors.surface,
-              text: colors.text,
-              border: colors.border,
-            },
-          }}
-        >
-          <StatusBar style="dark" />
+      <StatusBar
+          style="light"
+        />
+      <NavigationContainer
+        theme={{
+          ...DefaultTheme,
 
-          <Stack.Navigator>
-            <Stack.Screen
-              name="DrawerNavigator"
-              component={DrawerNavigator}
-              options={{
-                headerShown: false,
-              }}
-            />
+          colors: {
+            ...DefaultTheme.colors,
+            primary: colors.primary,
+            background: colors.background,
+            card: colors.surface,
+            text: colors.text,
+            border: colors.border,
+          },
+        }}
+      >
 
-            <Stack.Screen
-              name="Detail"
-              component={RoutineDetailScreen}
-              options={{
-                title: "Detalles de rutina",
+        <Stack.Navigator>
+          <Stack.Screen
+            name="DrawerNavigator"
+            component={DrawerNavigator}
+            options={{
+              headerShown: false,
+            }}
+          />
 
-                headerStyle: {
-                  backgroundColor: colors.surface,
-                },
+          <Stack.Screen
+            name="Detail"
+            component={RoutineDetailScreen}
+            options={{
+              title: "Detalles de rutina",
 
-                headerTintColor: colors.text,
-                headerTitleStyle: { fontWeight: "800" },
+              headerStyle: {
+                backgroundColor: colors.surface,
+              },
 
-                headerShadowVisible: false,
-              }}
-            />
+              headerTintColor: colors.text,
+              headerTitleStyle: { fontWeight: "800" },
 
-            <Stack.Screen
-              name="AddRoutine"
-              component={AddRoutineScreen}
-              options={({ route }) => ({
-                title: route.params?.id ? "Editar Rutina" : "Nueva Rutina",
+              headerShadowVisible: false,
+            }}
+          />
 
-                headerStyle: {
-                  backgroundColor: colors.surface,
-                },
+          <Stack.Screen
+            name="AddRoutine"
+            component={AddRoutineScreen}
+            options={({ route }) => ({
+              title: route.params?.id ? "Editar Rutina" : "Nueva Rutina",
 
-                headerTintColor: colors.text,
-                headerTitleStyle: { fontWeight: "800" },
+              headerStyle: {
+                backgroundColor: colors.surface,
+              },
 
-                headerShadowVisible: false,
-              })}
-            />
-          </Stack.Navigator>
-        </NavigationContainer>
-      </RoutineProvider>
+              headerTintColor: colors.text,
+              headerTitleStyle: { fontWeight: "800" },
+
+              headerShadowVisible: false,
+            })}
+          />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </RoutineProvider>
   );
 }
