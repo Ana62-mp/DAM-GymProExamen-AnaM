@@ -65,7 +65,7 @@ export default function AddRoutineScreen({ navigation, route }: any) {
     setErrors((current) => ({ ...current, duration: undefined }));
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (isSaving) return;
     const cleanName = name.trim();
     const nextErrors: Errors = {};
@@ -90,8 +90,8 @@ export default function AddRoutineScreen({ navigation, route }: any) {
 
     setIsSaving(true);
     try {
-      if (idToEdit) updateRoutine(idToEdit, data);
-      else addRoutine(data);
+      if (idToEdit) await updateRoutine(idToEdit, data);
+      else await addRoutine(data);
 
       Alert.alert(
         idToEdit ? "Rutina actualizada" : "Rutina creada",
